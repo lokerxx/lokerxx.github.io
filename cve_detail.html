@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LOKERXX | Apache CVE Detail</title>
+    <title>LOKERXX | Vulnerability Detail</title>
     <meta
       name="description"
-      content="Apache CVE detail page showing both published records and reserved identifiers being tracked."
+      content="Vulnerability detail page showing public Apache CVE and CNVD records with source links."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&amp;display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
@@ -23,11 +23,15 @@
       <div class="grid-mask"></div>
 
       <header class="topbar">
-        <a class="brand" href="index.html">LOKERXX / RESEARCH</a>
+        <a class="brand" href="index.html">
+          <span class="brand-name">LOKERXX</span>
+          <span class="brand-tagline" data-i18n="brandTagline">Security research journal</span>
+        </a>
         <div class="topbar-tools">
           <nav class="nav">
             <a href="index.html" data-i18n="navHome">Home</a>
             <a href="#detail-index" data-i18n="navTable">Table</a>
+            <a href="#category-cnvd" data-i18n="navCnvd">CNVD</a>
             <a href="#detail-list" data-i18n="navDetails">Details</a>
           </nav>
           <button class="lang-toggle" id="language-toggle" type="button">中文</button>
@@ -35,24 +39,14 @@
       </header>
 
       <main>
-        <section id="detail-index" class="section">
-          <article class="panel table-panel">
-            <div class="table-wrap">
-              <table class="research-table detail-index-table">
-                <thead>
-                  <tr>
-                    <th data-i18n="colVendor">Vendor</th>
-                    <th data-i18n="colCve">CVE ID</th>
-                    <th data-i18n="colOfficialSeverity">Official Severity</th>
-                    <th data-i18n="colOfficialScore">Official Score</th>
-                    <th data-i18n="colNvdScore">NVD Score</th>
-                    <th data-i18n="colStatus">Status</th>
-                  </tr>
-                </thead>
-                <tbody id="detail-index-body"></tbody>
-              </table>
-            </div>
-          </article>
+        <nav class="category-nav" aria-label="Record categories">
+          <span class="category-nav-label" data-i18n="categoryNavLabel">Browse by category</span>
+          <a href="#category-cve" data-i18n="categoryCve">Apache CVE</a>
+          <a href="#category-cnvd" data-i18n="categoryCnvd">CNVD</a>
+        </nav>
+
+        <section id="detail-index" class="section records-section">
+          <div id="detail-index-groups"></div>
 
           <div class="detail-list" id="detail-list"></div>
         </section>

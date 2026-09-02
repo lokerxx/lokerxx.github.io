@@ -1,11 +1,11 @@
 # lokerxx.github.io
 
-一个可直接部署到 GitHub Pages 的安全研究主页，当前只展示已经公开的 CVE，已经带好 `GitHub Actions` 自动部署。
+一个可直接部署到 GitHub Pages 的安全研究主页，按 Apache CVE 与 CNVD 分类展示公开漏洞记录，已经带好 `GitHub Actions` 自动部署。
 
 ## 本地结构
 
-- `index.html`：首页，只展示已公开可核对的 CVE 总表
-- `cve_detail.html`：公开 CVE 详情页
+- `index.html`：首页，按 Apache CVE 与 CNVD 分类展示已公开可核对的漏洞总表
+- `cve_detail.html`：公开漏洞详情页
 - `cve-data.js`：研究数据源
 - `styles.css`：视觉样式
 - `script.js`：页面渲染与交互
@@ -18,4 +18,3 @@
 之后只要你把代码 push 到 `main`，工作流就会自动部署页面到：
 
 `https://lokerxx.github.io`
-

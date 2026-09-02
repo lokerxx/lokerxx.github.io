@@ -5,8 +5,10 @@ const LANGUAGE_STORAGE_KEY = "lokerxx-site-language";
 
 const uiText = {
   en: {
+    brandTagline: "Security research journal",
     navHome: "Home",
     navTable: "Table",
+    navCnvd: "CNVD",
     navDetails: "Details",
     colVendor: "Vendor",
     colCve: "CVE ID",
@@ -14,13 +16,22 @@ const uiText = {
     colOfficialScore: "Official Score",
     colNvdScore: "NVD / ADP Score",
     colStatus: "Status",
-    emptyState: "No Apache CVE tracking entries are available for display.",
-    pageTitleHome: "LOKERXX | Apache CVE Research",
-    pageTitleDetail: "LOKERXX | Apache CVE Detail",
+    emptyState: "No vulnerability tracking entries are available for display.",
+    pageTitleHome: "LOKERXX | Vulnerability Research",
+    pageTitleDetail: "LOKERXX | Vulnerability Detail",
     pageDescriptionHome:
-      "LOKERXX's Apache CVE research archive. The homepage tracks published and reserved CVE records with official severity, official score, NVD / ADP score, and status.",
+      "LOKERXX's vulnerability research archive. The homepage tracks public Apache CVE and CNVD records with source context.",
     pageDescriptionDetail:
-      "Apache CVE detail page showing the public record, official and NVD / ADP scores, affected versions, fixed versions, and references for tracked CVEs.",
+      "Vulnerability detail page showing public Apache CVE and CNVD records with scores, affected versions, and source links.",
+    categoryNavLabel: "Browse by category",
+    categoryCve: "Apache CVE",
+    categoryCnvd: "CNVD",
+    categoryCveTitle: "Apache CVE records",
+    categoryCveDescription: "Apache security advisories tracked in the archive.",
+    categoryCnvdTitle: "CNVD records",
+    categoryCnvdDescription: "Reports from China's National Vulnerability Database.",
+    categoryRecordSingular: "record",
+    categoryRecordPlural: "records",
     detailPublicDescription: "Public Description",
     detailResearchNotes: "Research Notes",
     detailPublishedDate: "Published Date",
@@ -34,8 +45,10 @@ const uiText = {
     placeholder: "TBD",
   },
   zh: {
+    brandTagline: "安全研究日志",
     navHome: "首页",
     navTable: "总表",
+    navCnvd: "CNVD",
     navDetails: "详情",
     colVendor: "厂商",
     colCve: "CVE 编号",
@@ -43,13 +56,22 @@ const uiText = {
     colOfficialScore: "官方评分",
     colNvdScore: "NVD / ADP 评分",
     colStatus: "状态",
-    emptyState: "当前没有可展示的 Apache CVE 跟踪条目。",
-    pageTitleHome: "LOKERXX | Apache CVE 研究",
-    pageTitleDetail: "LOKERXX | Apache CVE 详情",
+    emptyState: "当前没有可展示的漏洞跟踪条目。",
+    pageTitleHome: "LOKERXX | 漏洞研究",
+    pageTitleDetail: "LOKERXX | 漏洞详情",
     pageDescriptionHome:
-      "LOKERXX 的 Apache CVE 研究归档首页，展示已公开和保留中的 CVE 记录、官方风险等级、官方评分、NVD / ADP 评分与状态。",
+      "LOKERXX 的漏洞记录首页，展示已公开的 Apache CVE 与 CNVD 记录及其来源背景。",
     pageDescriptionDetail:
-      "Apache CVE 详情页，展示已跟踪 CVE 的公开描述、官方评分、NVD / ADP 评分、影响版本、修复版本和参考链接。",
+      "漏洞详情页，展示公开 Apache CVE 与 CNVD 记录的描述、评分、影响版本和来源链接。",
+    categoryNavLabel: "按类别浏览",
+    categoryCve: "Apache CVE",
+    categoryCnvd: "CNVD",
+    categoryCveTitle: "Apache CVE 记录",
+    categoryCveDescription: "归档中的 Apache 安全公告记录。",
+    categoryCnvdTitle: "CNVD 记录",
+    categoryCnvdDescription: "中国国家信息安全漏洞库报告。",
+    categoryRecordSingular: "条记录",
+    categoryRecordPlural: "条记录",
     detailPublicDescription: "公开描述",
     detailResearchNotes: "补充说明",
     detailPublishedDate: "公开日期",
@@ -65,6 +87,7 @@ const uiText = {
 };
 
 const referenceLabelZh = {
+  "CNVD report": "CNVD 报告页面",
   "CVE.org record": "CVE.org 记录",
   "MITRE CVE API status": "MITRE CVE API 状态",
   "Apache ActiveMQ advisory": "Apache ActiveMQ 公告",
@@ -93,12 +116,14 @@ const statusLabelMap = {
     published: "Published",
     reserved: "Reserved",
     rejected: "Rejected",
+    reported: "Reported",
     none: "-",
   },
   zh: {
     published: "已公开",
     reserved: "保留中",
     rejected: "已拒绝",
+    reported: "已上报",
     none: "-",
   },
 };
@@ -126,6 +151,55 @@ if (yearNode) {
 
 const t = (key) => uiText[currentLanguage][key] ?? uiText.en[key] ?? key;
 
+const normalizeCategory = (category) => String(category || "CVE").trim().toUpperCase();
+
+const categoryConfig = {
+  CVE: {
+    labelKey: "categoryCve",
+    titleKey: "categoryCveTitle",
+    descriptionKey: "categoryCveDescription",
+  },
+  CNVD: {
+    labelKey: "categoryCnvd",
+    titleKey: "categoryCnvdTitle",
+    descriptionKey: "categoryCnvdDescription",
+  },
+};
+
+const getCategoryMeta = (category) => {
+  const key = normalizeCategory(category);
+  const config = categoryConfig[key] || categoryConfig.CVE;
+
+  return {
+    key,
+    label: t(config.labelKey),
+    title: t(config.titleKey),
+    description: t(config.descriptionKey),
+  };
+};
+
+const categoryAnchor = (category) => `category-${normalizeCategory(category).toLowerCase()}`;
+
+const groupEntriesByCategory = (sourceEntries) => {
+  const groups = [];
+  const groupMap = new Map();
+
+  sourceEntries.forEach((entry) => {
+    const key = normalizeCategory(entry.category);
+    let group = groupMap.get(key);
+
+    if (!group) {
+      group = { category: key, entries: [] };
+      groupMap.set(key, group);
+      groups.push(group);
+    }
+
+    group.entries.push(entry);
+  });
+
+  return groups;
+};
+
 const getEntryText = (entry, field) => {
   if (currentLanguage === "zh" && entry[`${field}Zh`]) {
     return entry[`${field}Zh`];
@@ -133,6 +207,8 @@ const getEntryText = (entry, field) => {
 
   return entry[field] ?? "";
 };
+
+const getEntryVendor = (entry) => getEntryText(entry, "vendor") || "-";
 
 const formatScore = (score) => {
   if (score === null || score === undefined || score === "") {
@@ -235,6 +311,10 @@ const formatStatus = (status) => {
     return { label: statusLabelMap[currentLanguage].rejected, className: "status-pill is-rejected" };
   }
 
+  if (normalizedStatus === "REPORTED") {
+    return { label: statusLabelMap[currentLanguage].reported, className: "status-pill is-reported" };
+  }
+
   return { label: normalizedStatus, className: "status-pill is-none" };
 };
 
@@ -281,65 +361,101 @@ function applyStaticText() {
   }
 }
 
-function renderHomePage() {
-  const tableBody = document.querySelector("#public-cve-body");
+const renderTableHead = () => `
+  <thead>
+    <tr>
+      <th data-i18n="colVendor">${t("colVendor")}</th>
+      <th data-i18n="colCve">${t("colCve")}</th>
+      <th data-i18n="colOfficialSeverity">${t("colOfficialSeverity")}</th>
+      <th data-i18n="colOfficialScore">${t("colOfficialScore")}</th>
+      <th data-i18n="colNvdScore">${t("colNvdScore")}</th>
+      <th data-i18n="colStatus">${t("colStatus")}</th>
+    </tr>
+  </thead>
+`;
 
-  if (!tableBody) {
-    return;
-  }
+const renderEntryRow = (entry) => {
+  const officialSeverity = formatOfficialSeverity(entry.officialSeverity);
+  const status = formatStatus(entry.status);
+  const officialScore = resolveOfficialScore(entry);
+  const officialScoreSource = resolveOfficialScoreSource(entry);
+  const nvdScore = resolveNvdScore(entry);
+  const nvdScoreSource = resolveNvdScoreSource(entry);
+  const entryHref = page === "detail" ? `#${entry.id}` : `cve_detail.html#${entry.id}`;
 
-  if (entries.length === 0) {
-    tableBody.innerHTML = `
-      <tr>
-        <td colspan="6" class="empty-state">${t("emptyState")}</td>
-      </tr>
-    `;
-    return;
-  }
+  return `
+    <tr>
+      <td>${getEntryVendor(entry)}</td>
+      <td>
+        <a class="cve-link" href="${entryHref}">${entry.publicCve}</a>
+      </td>
+      <td>
+        <div class="risk-cell">
+          <span class="${officialSeverity.className}">${officialSeverity.label}</span>
+          ${formatScoreSource(entry.officialSeveritySource)}
+        </div>
+      </td>
+      <td>
+        <div class="score-cell">
+          <span class="${scoreClassName(officialScore)}">${formatScore(officialScore)}</span>
+          ${formatScoreSource(officialScoreSource)}
+        </div>
+      </td>
+      <td>
+        <div class="score-cell">
+          <span class="${scoreClassName(nvdScore)}">${formatScore(nvdScore)}</span>
+          ${formatScoreSource(nvdScoreSource)}
+        </div>
+      </td>
+      <td>
+        <div class="status-cell">
+          <span class="${status.className}">${status.label}</span>
+          ${formatScoreSource(entry.statusSource)}
+        </div>
+      </td>
+    </tr>
+  `;
+};
 
-  tableBody.innerHTML = entries
-    .map((entry) => {
-      const officialSeverity = formatOfficialSeverity(entry.officialSeverity);
-      const status = formatStatus(entry.status);
-      const officialScore = resolveOfficialScore(entry);
-      const officialScoreSource = resolveOfficialScoreSource(entry);
-      const nvdScore = resolveNvdScore(entry);
-      const nvdScoreSource = resolveNvdScoreSource(entry);
+const renderCategoryGroups = (sourceEntries) =>
+  groupEntriesByCategory(sourceEntries)
+    .map((group) => {
+      const category = getCategoryMeta(group.category);
+      const countLabel = group.entries.length === 1 ? t("categoryRecordSingular") : t("categoryRecordPlural");
 
       return `
-        <tr>
-          <td>${entry.vendor}</td>
-          <td>
-            <a class="cve-link" href="cve_detail.html#${entry.id}">${entry.publicCve}</a>
-          </td>
-          <td>
-            <div class="risk-cell">
-              <span class="${officialSeverity.className}">${officialSeverity.label}</span>
-              ${formatScoreSource(entry.officialSeveritySource)}
+        <section class="category-group" id="${categoryAnchor(group.category)}">
+          <div class="category-heading">
+            <div>
+              <p class="category-eyebrow">${category.label}</p>
+              <h3>${category.title}</h3>
+              <p>${category.description}</p>
             </div>
-          </td>
-          <td>
-            <div class="score-cell">
-              <span class="${scoreClassName(officialScore)}">${formatScore(officialScore)}</span>
-              ${formatScoreSource(officialScoreSource)}
+            <span class="category-count">${group.entries.length} ${countLabel}</span>
+          </div>
+          <article class="panel table-panel">
+            <div class="table-wrap">
+              <table class="research-table">
+                ${renderTableHead()}
+                <tbody>${group.entries.map(renderEntryRow).join("")}</tbody>
+              </table>
             </div>
-          </td>
-          <td>
-            <div class="score-cell">
-              <span class="${scoreClassName(nvdScore)}">${formatScore(nvdScore)}</span>
-              ${formatScoreSource(nvdScoreSource)}
-            </div>
-          </td>
-          <td>
-            <div class="status-cell">
-              <span class="${status.className}">${status.label}</span>
-              ${formatScoreSource(entry.statusSource)}
-            </div>
-          </td>
-        </tr>
+          </article>
+        </section>
       `;
     })
     .join("");
+
+function renderHomePage() {
+  const groups = document.querySelector("#public-cve-groups");
+
+  if (!groups) {
+    return;
+  }
+
+  groups.innerHTML = entries.length
+    ? renderCategoryGroups(entries)
+    : `<article class="panel table-panel"><p class="empty-state">${t("emptyState")}</p></article>`;
 }
 
 function renderDetailFacts(entry, status, officialSeverity) {
@@ -395,19 +511,15 @@ function renderDetailFacts(entry, status, officialSeverity) {
 }
 
 function renderDetailPage() {
-  const detailIndexBody = document.querySelector("#detail-index-body");
+  const detailIndexGroups = document.querySelector("#detail-index-groups");
   const detailList = document.querySelector("#detail-list");
 
-  if (!detailIndexBody || !detailList) {
+  if (!detailIndexGroups || !detailList) {
     return;
   }
 
   if (entries.length === 0) {
-    detailIndexBody.innerHTML = `
-      <tr>
-        <td colspan="6" class="empty-state">${t("emptyState")}</td>
-      </tr>
-    `;
+    detailIndexGroups.innerHTML = `<article class="panel table-panel"><p class="empty-state">${t("emptyState")}</p></article>`;
     detailList.innerHTML = `
       <article class="panel detail-section">
         <p class="detail-copy">${t("emptyState")}</p>
@@ -416,52 +528,13 @@ function renderDetailPage() {
     return;
   }
 
-  detailIndexBody.innerHTML = entries
-    .map((entry) => {
-      const officialSeverity = formatOfficialSeverity(entry.officialSeverity);
-      const status = formatStatus(entry.status);
-      const officialScore = resolveOfficialScore(entry);
-      const officialScoreSource = resolveOfficialScoreSource(entry);
-      const nvdScore = resolveNvdScore(entry);
-      const nvdScoreSource = resolveNvdScoreSource(entry);
-
-      return `
-        <tr>
-          <td>${entry.vendor}</td>
-          <td><a class="cve-link" href="#${entry.id}">${entry.publicCve}</a></td>
-          <td>
-            <div class="risk-cell">
-              <span class="${officialSeverity.className}">${officialSeverity.label}</span>
-              ${formatScoreSource(entry.officialSeveritySource)}
-            </div>
-          </td>
-          <td>
-            <div class="score-cell">
-              <span class="${scoreClassName(officialScore)}">${formatScore(officialScore)}</span>
-              ${formatScoreSource(officialScoreSource)}
-            </div>
-          </td>
-          <td>
-            <div class="score-cell">
-              <span class="${scoreClassName(nvdScore)}">${formatScore(nvdScore)}</span>
-              ${formatScoreSource(nvdScoreSource)}
-            </div>
-          </td>
-          <td>
-            <div class="status-cell">
-              <span class="${status.className}">${status.label}</span>
-              ${formatScoreSource(entry.statusSource)}
-            </div>
-          </td>
-        </tr>
-      `;
-    })
-    .join("");
+  detailIndexGroups.innerHTML = renderCategoryGroups(entries);
 
   detailList.innerHTML = entries
     .map((entry) => {
       const status = formatStatus(entry.status);
       const officialSeverity = formatOfficialSeverity(entry.officialSeverity);
+      const category = getCategoryMeta(entry.category);
       const localizedSummary = getEntryText(entry, "summary");
       const localizedDetail = getEntryText(entry, "detail");
       const summaryBlock = !entry.hidePublicDescription && localizedSummary
@@ -486,7 +559,8 @@ function renderDetailPage() {
         <article class="panel detail-section" id="${entry.id}">
           <div class="detail-section-head">
             <div>
-              <p class="eyebrow">${entry.vendor}</p>
+              <p class="category-label">${category.label}</p>
+              <p class="eyebrow">${getEntryVendor(entry)}</p>
               <h3>${entry.publicCve}</h3>
             </div>
           </div>
