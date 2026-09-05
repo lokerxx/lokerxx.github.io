@@ -7,8 +7,12 @@ const uiText = {
   en: {
     brandTagline: "Security research journal",
     navHome: "Home",
-    navTable: "Table",
-    navCnvd: "CNVD",
+    navRecords: "Vulnerability Discoveries",
+    profileTitle: "About me",
+    profileSummary: "I am a cybersecurity researcher focused on offensive security and security research.",
+    profileCertifications: "I hold the following certifications:",
+    pageTitleRecords: "LOKERXX | Vulnerability Discoveries",
+    pageDescriptionRecords: "Public Apache CVE and CNVD vulnerability discovery records with scores and source links.",
     navDetails: "Details",
     colVendor: "Vendor",
     colCve: "CVE ID",
@@ -20,7 +24,7 @@ const uiText = {
     pageTitleHome: "LOKERXX | Vulnerability Research",
     pageTitleDetail: "LOKERXX | Vulnerability Detail",
     pageDescriptionHome:
-      "LOKERXX's vulnerability research archive. The homepage tracks public Apache CVE and CNVD records with source context.",
+      "Cybersecurity researcher focused on offensive security and security research. Certifications: CISSP, OSCP, CRTO.",
     pageDescriptionDetail:
       "Vulnerability detail page showing public Apache CVE and CNVD records with scores, affected versions, and source links.",
     categoryNavLabel: "Browse by category",
@@ -47,8 +51,12 @@ const uiText = {
   zh: {
     brandTagline: "安全研究日志",
     navHome: "首页",
-    navTable: "总表",
-    navCnvd: "CNVD",
+    navRecords: "发现漏洞记录",
+    profileTitle: "关于我",
+    profileSummary: "我是一名网络安全研究员，专注于进攻性安全与安全研究。",
+    profileCertifications: "我持有以下认证：",
+    pageTitleRecords: "LOKERXX | 发现漏洞记录",
+    pageDescriptionRecords: "已公开的 Apache CVE 与 CNVD 漏洞发现记录、评分及来源链接。",
     navDetails: "详情",
     colVendor: "厂商",
     colCve: "CVE 编号",
@@ -60,7 +68,7 @@ const uiText = {
     pageTitleHome: "LOKERXX | 漏洞研究",
     pageTitleDetail: "LOKERXX | 漏洞详情",
     pageDescriptionHome:
-      "LOKERXX 的漏洞记录首页，展示已公开的 Apache CVE 与 CNVD 记录及其来源背景。",
+      "LOKERXX，专注于进攻性安全与安全研究的网络安全研究员，持有 CISSP、OSCP 和 CRTO 认证。",
     pageDescriptionDetail:
       "漏洞详情页，展示公开 Apache CVE 与 CNVD 记录的描述、评分、影响版本和来源链接。",
     categoryNavLabel: "按类别浏览",
@@ -353,11 +361,12 @@ function applyStaticText() {
     toggleButton.textContent = currentLanguage === "zh" ? "English" : "中文";
   }
 
-  document.title = page === "detail" ? t("pageTitleDetail") : t("pageTitleHome");
+  const pageKey = page === "detail" ? "Detail" : page === "records" ? "Records" : "Home";
+  document.title = t(`pageTitle${pageKey}`);
 
   const descriptionNode = document.querySelector('meta[name="description"]');
   if (descriptionNode) {
-    descriptionNode.setAttribute("content", page === "detail" ? t("pageDescriptionDetail") : t("pageDescriptionHome"));
+    descriptionNode.setAttribute("content", t(`pageDescription${pageKey}`));
   }
 }
 
@@ -446,7 +455,7 @@ const renderCategoryGroups = (sourceEntries) =>
     })
     .join("");
 
-function renderHomePage() {
+function renderRecordsPage() {
   const groups = document.querySelector("#public-cve-groups");
 
   if (!groups) {
@@ -589,8 +598,8 @@ function renderDetailPage() {
 function renderPage() {
   applyStaticText();
 
-  if (page === "home") {
-    renderHomePage();
+  if (page === "records") {
+    renderRecordsPage();
   }
 
   if (page === "detail") {

@@ -1,5 +1,5 @@
-/* The night theme belongs to the homepage; detail pages keep their own palette. */
-body[data-page="home"] {
+/* Shared night theme for the profile and vulnerability records. */
+body.night-theme {
   color-scheme: dark;
   --bg: #080e20;
   --bg-soft: #101c32;
@@ -130,31 +130,58 @@ body[data-sky-paused="true"] .meteor { animation-play-state: paused; visibility:
 
 body[data-sky-paused="true"] .starlight-trail { display: none; }
 
-body[data-page="home"] .topbar {
+body.night-theme .topbar {
   background: rgba(8, 14, 32, 0.86);
   border-color: var(--line);
 }
 
-body[data-page="home"] :focus-visible { outline: 2px solid #a4caff; outline-offset: 4px; }
+body.night-theme :focus-visible { outline: 2px solid #a4caff; outline-offset: 4px; }
 
-body[data-page="home"] .panel { background: rgba(14, 24, 43, 0.92); }
-body[data-page="home"] .research-table th { background: rgba(28, 45, 72, 0.7); }
-body[data-page="home"] .research-table tbody tr:hover { background: rgba(118, 165, 238, 0.07); }
-body[data-page="home"] .nav a:hover,
-body[data-page="home"] .nav a:focus-visible,
-body[data-page="home"] .lang-toggle,
-body[data-page="home"] .category-nav a { background: rgba(25, 42, 68, 0.72); }
-body[data-page="home"] .lang-toggle:hover,
-body[data-page="home"] .category-nav a:hover { background: #233956; }
-body[data-page="home"] .score-pill.is-high,
-body[data-page="home"] .risk-pill.is-critical,
-body[data-page="home"] .status-pill.is-rejected { background: #38232e; }
-body[data-page="home"] .risk-pill.is-high,
-body[data-page="home"] .status-pill.is-reserved { background: #302a26; }
-body[data-page="home"] .risk-pill.is-low { background: #19332e; }
-body[data-page="home"] .status-pill.is-reported { background: var(--accent-soft); }
-body[data-page="home"] .records-section { padding-top: 2.5rem; }
-body[data-page="home"] #table { scroll-margin-top: 6rem; }
+body.night-theme .panel { background: rgba(14, 24, 43, 0.92); }
+body.night-theme .research-table th { background: rgba(28, 45, 72, 0.7); }
+body.night-theme .research-table tbody tr:hover { background: rgba(118, 165, 238, 0.07); }
+body.night-theme .nav a:hover,
+body.night-theme .nav a:focus-visible,
+body.night-theme .lang-toggle,
+body.night-theme .category-nav a { background: rgba(25, 42, 68, 0.72); }
+body.night-theme .lang-toggle:hover,
+body.night-theme .category-nav a:hover { background: #233956; }
+body.night-theme .score-pill.is-high,
+body.night-theme .risk-pill.is-critical,
+body.night-theme .status-pill.is-rejected { background: #38232e; }
+body.night-theme .risk-pill.is-high,
+body.night-theme .status-pill.is-reserved { background: #302a26; }
+body.night-theme .risk-pill.is-low { background: #19332e; }
+body.night-theme .status-pill.is-reported { background: var(--accent-soft); }
+body.night-theme .records-section { padding-top: 2.5rem; }
+body.night-theme #table { scroll-margin-top: 6rem; }
+
+body.night-theme .nav a[aria-current="page"] {
+  color: var(--text);
+  border-color: var(--line-strong);
+  background: rgba(25, 42, 68, 0.72);
+}
+
+.profile-intro {
+  max-width: 760px;
+  min-height: calc(100svh - 180px);
+  padding: clamp(3.5rem, 10vh, 7rem) 0 4rem;
+}
+
+.profile-label { color: var(--accent); font-size: 0.8rem; letter-spacing: 0.2em; }
+.profile-intro h1 { font-size: clamp(2.8rem, 6vw, 4.5rem); line-height: 1.15; margin: 1rem 0 1.75rem; }
+.profile-summary { max-width: 42ch; font-size: clamp(1.2rem, 2.6vw, 1.65rem); line-height: 1.8; }
+.certifications-label { margin: 2rem 0 1rem; color: var(--muted); line-height: 1.7; }
+.certifications { display: flex; flex-wrap: wrap; gap: 0.75rem; padding: 0; list-style: none; }
+.certifications li { padding: 0.75rem 1.25rem; border: 1px solid var(--line-strong); border-radius: 10px; background: #101c32cc; color: var(--accent-deep); letter-spacing: 0.06em; }
+.profile-records-link { display: inline-block; margin-top: 1.8rem; color: var(--accent); line-height: 1.8; text-decoration: underline; text-underline-offset: 0.3em; }
+.records-title { margin: 2.5rem 0 0; font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1.2; }
+
+@media (max-width: 800px) {
+  body.night-theme .topbar { flex-wrap: wrap; gap: 0.9rem; }
+  body.night-theme .topbar-tools { flex-wrap: wrap; gap: 0.5rem; }
+  body.night-theme .nav a { padding: 0.58rem 0.55rem; font-size: 0.82rem; }
+}
 
 @media (max-width: 620px) {
   .meteor-four, .meteor-five { display: none; }

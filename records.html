@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LOKERXX | Vulnerability Research</title>
+    <title>LOKERXX | 发现漏洞记录</title>
     <meta
       name="description"
-      content="Cybersecurity researcher focused on offensive security and security research. Certifications: CISSP, OSCP, CRTO."
+      content="LOKERXX's vulnerability research archive. The homepage tracks public Apache CVE and CNVD records with source context."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="meteor.css" />
   </head>
-  <body class="night-theme" data-page="home">
+  <body class="night-theme" data-page="records">
     <div class="page-shell">
       <div class="night-sky" aria-hidden="true">
         <div class="star-field"></div>
@@ -35,8 +35,8 @@
         </a>
         <div class="topbar-tools">
           <nav class="nav">
-            <a href="index.html" data-i18n="navHome" aria-current="page">Home</a>
-            <a href="records.html" data-i18n="navRecords">发现漏洞记录</a>
+            <a href="index.html" data-i18n="navHome">Home</a>
+            <a href="records.html" data-i18n="navRecords" aria-current="page">发现漏洞记录</a>
             <a href="cve_detail.html#detail-list" data-i18n="navDetails">Details</a>
           </nav>
           <button class="lang-toggle" id="language-toggle" type="button">中文</button>
@@ -44,17 +44,10 @@
       </header>
 
       <main>
-        <section class="profile-intro" aria-labelledby="profile-title">
-          <p class="profile-label">LOKERXX</p>
-          <h1 id="profile-title" data-i18n="profileTitle">关于我</h1>
-          <p class="profile-summary" data-i18n="profileSummary">我是一名网络安全研究员，专注于进攻性安全与安全研究。</p>
-          <p class="certifications-label" data-i18n="profileCertifications">我持有以下认证：</p>
-          <ul class="certifications">
-            <li>CISSP</li>
-            <li>OSCP</li>
-            <li>CRTO</li>
-          </ul>
-          <a class="profile-records-link" href="records.html"><span data-i18n="navRecords">发现漏洞记录</span><span aria-hidden="true"> ↗</span></a>
+        <h1 class="records-title" data-i18n="navRecords">发现漏洞记录</h1>
+
+        <section id="table" class="section records-section">
+          <div id="public-cve-groups"></div>
         </section>
       </main>
 
@@ -63,6 +56,7 @@
       </footer>
     </div>
 
+    <script src="cve-data.js"></script>
     <script src="script.js"></script>
     <script src="meteor.js"></script>
   </body>

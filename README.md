@@ -1,13 +1,15 @@
 # lokerxx.github.io
 
-一个可直接部署到 GitHub Pages 的安全研究主页，按 Apache CVE 与 CNVD 分类展示公开漏洞记录，已经带好 `GitHub Actions` 自动部署。
+一个可直接部署到 GitHub Pages 的安全研究主页，首页展示个人介绍与认证，独立的发现漏洞记录页按 Apache CVE 与 CNVD 分类展示公开记录，已经带好 `GitHub Actions` 自动部署。
 
 ## 本地结构
 
-- `index.html`：首页，按 Apache CVE 与 CNVD 分类展示已公开可核对的漏洞总表
+- `index.html`：首页，展示个人介绍与 CISSP、OSCP、CRTO 认证
+- `records.html`：发现漏洞记录，按 Apache CVE 与 CNVD 分类展示已公开可核对的漏洞表格
 - `cve_detail.html`：公开漏洞详情页
 - `cve-data.js`：研究数据源
 - `styles.css`：视觉样式
+- `meteor.css` / `meteor.js`：星空主题、流星与鼠标星光效果
 - `script.js`：页面渲染与交互
 
 ## 怎么发布
