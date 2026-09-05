@@ -1,0 +1,166 @@
+/* The night theme belongs to the homepage; detail pages keep their own palette. */
+body[data-page="home"] {
+  color-scheme: dark;
+  --bg: #080e20;
+  --bg-soft: #101c32;
+  --panel: #101a2e;
+  --line: rgba(151, 181, 224, 0.16);
+  --line-strong: #506e99;
+  --text: #e1eaf8;
+  --muted: #9aadc7;
+  --accent: #91baff;
+  --accent-deep: #bdd6ff;
+  --accent-soft: #182c49;
+  --gold: #edbc7c;
+  --red: #ffa59e;
+  --green: #90d5b3;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  background: #080e20;
+}
+
+.night-sky {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at 76% 12%, #20345580, transparent 48%),
+    radial-gradient(ellipse at 14% 63%, #25204755, transparent 52%),
+    linear-gradient(165deg, #080e20, #0c142a 55%, #080d1c);
+}
+
+.star-field {
+  position: absolute;
+  inset: 0;
+  opacity: 0.7;
+  background-image:
+    radial-gradient(1px 1px at 23px 37px, #d9e8ff 95%, transparent),
+    radial-gradient(1px 1px at 131px 113px, #a3bfec 95%, transparent),
+    radial-gradient(1.5px 1.5px at 83px 173px, #d2e4ff 95%, transparent),
+    radial-gradient(1px 1px at 191px 59px, #7997c8 95%, transparent);
+  background-size: 257px 263px, 349px 307px, 467px 419px, 179px 211px;
+  mask-image: linear-gradient(#000, #0009);
+}
+
+.meteor {
+  --flight: 9s;
+  position: absolute;
+  top: 0;
+  left: 60%;
+  width: clamp(100px, 19vw, 270px);
+  height: 1px;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, #89b8ff80 75%, #eaf5ff);
+  transform-origin: right center;
+  filter: drop-shadow(0 0 5px #8cbaff);
+  animation: meteor-flight var(--flight) linear infinite;
+}
+
+.meteor::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: -1px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #eff8ff;
+  box-shadow: 0 0 8px 2px #a4ccff80;
+}
+
+.meteor-one { left: 42%; top: -4%; animation-delay: -0.6s; }
+.meteor-two { left: 78%; top: 10%; --flight: 12s; animation-delay: -5s; }
+.meteor-three { left: 12%; top: 22%; --flight: 11s; animation-delay: -7.5s; }
+.meteor-four { left: 94%; top: 43%; --flight: 15s; animation-delay: -3s; }
+.meteor-five { left: 56%; top: 60%; --flight: 13s; animation-delay: -10s; }
+
+@keyframes meteor-flight {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(145deg) scaleX(0.5); }
+  3% { opacity: 0.85; }
+  15% { opacity: 0; transform: translate3d(-55vw, 38.5vw, 0) rotate(145deg) scaleX(1); }
+  100% { opacity: 0; transform: translate3d(-55vw, 38.5vw, 0) rotate(145deg) scaleX(1); }
+}
+
+body[data-sky-paused="true"] .meteor { animation-play-state: paused; visibility: hidden; }
+
+.starlight-trail {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cursor-sparkle {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  margin: calc(var(--size) / -2);
+  color: #dcecff;
+  filter: drop-shadow(0 0 4px #94bfff);
+  animation: cursor-shimmer var(--lifetime) ease-out forwards;
+}
+
+.cursor-sparkle::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: currentColor;
+  clip-path: polygon(50% 0, 61% 38%, 100% 50%, 61% 62%, 50% 100%, 39% 62%, 0 50%, 39% 38%);
+}
+
+.cursor-sparkle.is-dust {
+  width: 3px;
+  height: 3px;
+  margin: -1.5px;
+  color: #9fbfff;
+}
+
+.cursor-sparkle.is-dust::before { clip-path: none; border-radius: 50%; }
+
+@keyframes cursor-shimmer {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(0.35) rotate(0deg); }
+  16% { opacity: 0.9; transform: translate3d(0, 0, 0) scale(1) rotate(8deg); }
+  38% { opacity: 0.45; }
+  52% { opacity: 0.75; }
+  100% { opacity: 0; transform: translate3d(var(--drift-x), var(--drift-y), 0) scale(0.15) rotate(65deg); }
+}
+
+body[data-sky-paused="true"] .starlight-trail { display: none; }
+
+body[data-page="home"] .topbar {
+  background: rgba(8, 14, 32, 0.86);
+  border-color: var(--line);
+}
+
+body[data-page="home"] :focus-visible { outline: 2px solid #a4caff; outline-offset: 4px; }
+
+body[data-page="home"] .panel { background: rgba(14, 24, 43, 0.92); }
+body[data-page="home"] .research-table th { background: rgba(28, 45, 72, 0.7); }
+body[data-page="home"] .research-table tbody tr:hover { background: rgba(118, 165, 238, 0.07); }
+body[data-page="home"] .nav a:hover,
+body[data-page="home"] .nav a:focus-visible,
+body[data-page="home"] .lang-toggle,
+body[data-page="home"] .category-nav a { background: rgba(25, 42, 68, 0.72); }
+body[data-page="home"] .lang-toggle:hover,
+body[data-page="home"] .category-nav a:hover { background: #233956; }
+body[data-page="home"] .score-pill.is-high,
+body[data-page="home"] .risk-pill.is-critical,
+body[data-page="home"] .status-pill.is-rejected { background: #38232e; }
+body[data-page="home"] .risk-pill.is-high,
+body[data-page="home"] .status-pill.is-reserved { background: #302a26; }
+body[data-page="home"] .risk-pill.is-low { background: #19332e; }
+body[data-page="home"] .status-pill.is-reported { background: var(--accent-soft); }
+body[data-page="home"] .records-section { padding-top: 2.5rem; }
+body[data-page="home"] #table { scroll-margin-top: 6rem; }
+
+@media (max-width: 620px) {
+  .meteor-four, .meteor-five { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Keep the background static when reduced motion is requested. */
+  body:not([data-sky-paused="false"]) .meteor { animation: none; visibility: hidden; }
+}
