@@ -353,7 +353,9 @@ function applyStaticText() {
 
   document.querySelectorAll("[data-i18n]").forEach((node) => {
     const key = node.dataset.i18n;
-    node.textContent = t(key);
+    const translation = uiText[currentLanguage][key] ?? uiText.en[key];
+    // Keep the readable HTML fallback if a translation is missing.
+    if (translation !== undefined) node.textContent = translation;
   });
 
   const toggleButton = document.querySelector("#language-toggle");
