@@ -14,13 +14,19 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&amp;display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=720756fcdd50" />
+    <link rel="stylesheet" href="styles.css?v=single-dark-20261005" />
+    <link rel="stylesheet" href="meteor.css?v=night-detail-20261005" />
   </head>
-  <body class="detail-page" data-page="detail">
+  <body data-page="detail">
     <div class="page-shell">
-      <div class="ambient ambient-one"></div>
-      <div class="ambient ambient-two"></div>
-      <div class="grid-mask"></div>
+      <div class="night-sky" aria-hidden="true">
+        <div class="star-field"></div>
+        <div class="meteor meteor-one"></div>
+        <div class="meteor meteor-two"></div>
+        <div class="meteor meteor-three"></div>
+        <div class="meteor meteor-four"></div>
+        <div class="meteor meteor-five"></div>
+      </div>
 
       <header class="topbar">
         <a class="brand" href="index.html">
@@ -39,9 +45,7 @@
 
       <main>
 
-        <section id="detail-index" class="section records-section">
-          <div id="detail-index-groups"></div>
-
+        <section id="detail-page" class="section records-section">
           <div class="detail-list" id="detail-list"></div>
         </section>
       </main>
@@ -51,7 +55,8 @@
       </footer>
     </div>
 
-    <script src="cve-data.js?v=83eefd35dd3e"></script>
-    <script src="script.js?v=f29453884b3e"></script>
+    <script src="cve-data.js?v=apple-cve-score-nvd-20261005"></script>
+    <script src="script.js?v=no-duplicate-vendor-20261005"></script>
+    <script src="meteor.js?v=519c3fd74f6c"></script>
   </body>
 </html>

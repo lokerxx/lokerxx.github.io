@@ -1,18 +1,18 @@
 :root {
-  --bg: #eef7fc;
-  --bg-soft: #f8fcff;
-  --panel: #ffffff;
-  --line: #d7e8f2;
-  --line-strong: #8fc4df;
-  --text: #18344b;
-  --muted: #6d8495;
-  --accent: #287eae;
-  --accent-deep: #145a82;
-  --accent-soft: #e4f3fb;
-  --gold: #b87632;
-  --red: #c55f54;
-  --green: #3e8c68;
-  --shadow: 0 18px 48px rgba(56, 116, 149, 0.12);
+  --bg: #080e20;
+  --bg-soft: #101c32;
+  --panel: #101a2e;
+  --line: rgba(151, 181, 224, 0.16);
+  --line-strong: #506e99;
+  --text: #e1eaf8;
+  --muted: #9aadc7;
+  --accent: #91baff;
+  --accent-deep: #bdd6ff;
+  --accent-soft: #182c49;
+  --gold: #edbc7c;
+  --red: #ffa59e;
+  --green: #90d5b3;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
   --radius: 20px;
   --max-width: 1120px;
 }
@@ -30,10 +30,8 @@ body {
   min-height: 100vh;
   font-family: "DM Sans", sans-serif;
   color: var(--text);
-  background:
-    radial-gradient(circle at 8% -4%, rgba(157, 216, 242, 0.48), transparent 27rem),
-    radial-gradient(circle at 94% 20%, rgba(211, 237, 249, 0.72), transparent 30rem),
-    linear-gradient(180deg, #edf7fc 0%, #f8fcff 52%, #eef7fc 100%);
+  color-scheme: dark;
+  background: var(--bg);
   overflow-x: hidden;
 }
 
@@ -42,46 +40,14 @@ a {
   text-decoration: none;
 }
 
+:focus-visible {
+  outline: 2px solid #a4caff;
+  outline-offset: 4px;
+}
+
 .page-shell {
   position: relative;
   isolation: isolate;
-}
-
-.ambient {
-  position: fixed;
-  width: 30rem;
-  height: 30rem;
-  border-radius: 999px;
-  filter: blur(42px);
-  opacity: 0.22;
-  pointer-events: none;
-  z-index: -3;
-}
-
-.ambient-one {
-  top: -11rem;
-  left: -12rem;
-  background: radial-gradient(circle, rgba(111, 192, 229, 0.52), transparent 64%);
-  animation: drift-one 16s ease-in-out infinite;
-}
-
-.ambient-two {
-  right: -13rem;
-  bottom: 8vh;
-  background: radial-gradient(circle, rgba(169, 221, 241, 0.58), transparent 62%);
-  animation: drift-two 18s ease-in-out infinite;
-}
-
-.grid-mask {
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(40, 126, 174, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(40, 126, 174, 0.045) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.72), transparent 76%);
-  pointer-events: none;
-  z-index: -2;
 }
 
 .topbar {
@@ -93,8 +59,8 @@ a {
   width: min(calc(100% - 2.5rem), var(--max-width));
   margin: 0 auto;
   padding: 1rem 0;
-  border-bottom: 1px solid rgba(160, 201, 220, 0.58);
-  background: rgba(238, 247, 252, 0.84);
+  border-bottom: 1px solid var(--line);
+  background: rgba(8, 14, 32, 0.86);
   backdrop-filter: blur(16px);
   z-index: 10;
 }
@@ -144,16 +110,16 @@ a {
 .nav a:hover,
 .nav a:focus-visible,
 .nav a[aria-current="page"] {
-  color: var(--accent-deep);
+  color: var(--text);
   border-color: var(--line);
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(25, 42, 68, 0.72);
 }
 
 .lang-toggle {
   padding: 0.58rem 0.78rem;
   border: 1px solid var(--line-strong);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(25, 42, 68, 0.72);
   color: var(--accent-deep);
   font: inherit;
   font-size: 0.88rem;
@@ -168,7 +134,7 @@ a {
 .lang-toggle:focus-visible {
   transform: translateY(-1px);
   border-color: var(--accent);
-  background: #ffffff;
+  background: #233956;
 }
 
 main {
@@ -262,7 +228,7 @@ h1 em {
   padding: 0.42rem 0.7rem;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.68);
+  background: rgba(25, 42, 68, 0.72);
   color: var(--accent-deep);
   font-size: 0.82rem;
   font-weight: 600;
@@ -275,12 +241,12 @@ h1 em {
 .category-nav a:hover,
 .category-nav a:focus-visible {
   border-color: var(--line-strong);
-  background: #ffffff;
+  background: #233956;
   transform: translateY(-1px);
 }
 
 .panel {
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(14, 24, 43, 0.92);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -315,7 +281,11 @@ h1 em {
 }
 
 .records-section {
-  padding-top: 3.7rem;
+  padding-top: 2.5rem;
+}
+
+#table {
+  scroll-margin-top: 6rem;
 }
 
 .section-header {
@@ -416,7 +386,7 @@ h1 em {
 }
 
 .research-table th {
-  background: rgba(228, 243, 251, 0.56);
+  background: rgba(28, 45, 72, 0.7);
   color: var(--accent-deep);
   font-size: 0.73rem;
   font-weight: 700;
@@ -438,7 +408,7 @@ h1 em {
 }
 
 .research-table tbody tr:hover {
-  background: #f8fcff;
+  background: rgba(118, 165, 238, 0.07);
 }
 
 .cve-link,
@@ -478,7 +448,7 @@ h1 em {
 .score-pill.is-high,
 .risk-pill.is-critical {
   border-color: rgba(197, 95, 84, 0.35);
-  background: #fff4f2;
+  background: #38232e;
   color: var(--red);
 }
 
@@ -490,7 +460,7 @@ h1 em {
 
 .risk-pill.is-high {
   border-color: rgba(184, 118, 50, 0.34);
-  background: #fff7ed;
+  background: #302a26;
   color: var(--gold);
 }
 
@@ -502,7 +472,7 @@ h1 em {
 
 .risk-pill.is-low {
   border-color: rgba(62, 140, 104, 0.28);
-  background: #effaf4;
+  background: #19332e;
   color: var(--green);
 }
 
@@ -531,31 +501,31 @@ h1 em {
 
 .status-pill.is-reported {
   border-color: rgba(40, 126, 174, 0.27);
-  background: #f1f8fd;
+  background: var(--accent-soft);
   color: var(--accent-deep);
 }
 
 .status-pill.is-reserved {
   border-color: rgba(184, 118, 50, 0.27);
-  background: #fff7ed;
+  background: #302a26;
   color: var(--gold);
 }
 
 .status-pill.is-rejected {
   border-color: rgba(197, 95, 84, 0.26);
-  background: #fff4f2;
+  background: #38232e;
   color: var(--red);
 }
 
 .detail-list {
   display: grid;
   gap: 1.25rem;
-  margin-top: 2rem;
+  margin-top: 0;
 }
 
 .detail-section {
   padding: 1.85rem;
-  border-left: 4px solid #acd8ec;
+  border-left: 4px solid var(--line-strong);
 }
 
 .detail-section-head {
@@ -588,7 +558,7 @@ h1 em {
   padding: 1.1rem 1.2rem;
   border: 1px solid var(--line);
   border-radius: 15px;
-  background: rgba(248, 252, 255, 0.9);
+  background: rgba(14, 24, 43, 0.84);
 }
 
 .detail-block-label,
@@ -647,36 +617,9 @@ h1 em {
   color: var(--muted);
 }
 
-@keyframes drift-one {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-
-  50% {
-    transform: translate3d(2rem, 1.5rem, 0);
-  }
-}
-
-@keyframes drift-two {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-
-  50% {
-    transform: translate3d(-1.5rem, -2rem, 0);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  .ambient-one,
-  .ambient-two {
-    animation: none;
   }
 }
 

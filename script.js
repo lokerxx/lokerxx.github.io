@@ -12,7 +12,7 @@ const uiText = {
     profileSummary: "I am a cybersecurity researcher focused on offensive security and security research.",
     profileCertifications: "I hold the following certifications:",
     pageTitleRecords: "LOKERXX | Vulnerability Discoveries",
-    pageDescriptionRecords: "Public Apache CVE and CNVD vulnerability discovery records with scores and source links.",
+    pageDescriptionRecords: "Public Apache CVE, CNVD, and Apple CVE research records with source links.",
     navDetails: "Details",
     colVendor: "Vendor",
     colCve: "CVE ID",
@@ -31,9 +31,12 @@ const uiText = {
     categoryCve: "Apache CVE",
     categoryCnvd: "CNVD",
     categoryCveTitle: "Apache CVE records",
-    categoryCveDescription: "Apache security advisories tracked in the archive.",
+    categoryCveDescription: "",
     categoryCnvdTitle: "CNVD records",
     categoryCnvdDescription: "Reports from China's National Vulnerability Database.",
+    categoryApple: "Apple",
+    categoryAppleTitle: "Apple CVE records",
+    categoryAppleDescription: "",
     categoryRecordSingular: "record",
     categoryRecordPlural: "records",
     detailPublicDescription: "Public Description",
@@ -46,6 +49,7 @@ const uiText = {
     detailAffectedVersions: "Affected Versions",
     detailFixedVersions: "Fixed Versions",
     detailReferences: "References",
+    detailSelectPrompt: "Select a CVE from the vulnerability discovery records to view its details.",
     placeholder: "TBD",
   },
   zh: {
@@ -56,7 +60,7 @@ const uiText = {
     profileSummary: "我是一名网络安全研究员，专注于进攻性安全与安全研究。",
     profileCertifications: "我持有以下认证：",
     pageTitleRecords: "LOKERXX | 发现漏洞记录",
-    pageDescriptionRecords: "已公开的 Apache CVE 与 CNVD 漏洞发现记录、评分及来源链接。",
+    pageDescriptionRecords: "已公开的 Apache CVE、CNVD 与 Apple CVE 研究记录及来源链接。",
     navDetails: "详情",
     colVendor: "厂商",
     colCve: "CVE 编号",
@@ -75,9 +79,12 @@ const uiText = {
     categoryCve: "Apache CVE",
     categoryCnvd: "CNVD",
     categoryCveTitle: "Apache CVE 记录",
-    categoryCveDescription: "归档中的 Apache 安全公告记录。",
+    categoryCveDescription: "",
     categoryCnvdTitle: "CNVD 记录",
     categoryCnvdDescription: "中国国家信息安全漏洞库报告。",
+    categoryApple: "Apple",
+    categoryAppleTitle: "Apple CVE 记录",
+    categoryAppleDescription: "",
     categoryRecordSingular: "条记录",
     categoryRecordPlural: "条记录",
     detailPublicDescription: "公开描述",
@@ -90,6 +97,7 @@ const uiText = {
     detailAffectedVersions: "影响版本",
     detailFixedVersions: "修复版本",
     detailReferences: "参考链接",
+    detailSelectPrompt: "请从发现漏洞记录中选择一个 CVE 查看详情。",
     placeholder: "待公开",
   },
 };
@@ -171,6 +179,11 @@ const categoryConfig = {
     labelKey: "categoryCnvd",
     titleKey: "categoryCnvdTitle",
     descriptionKey: "categoryCnvdDescription",
+  },
+  APPLE: {
+    labelKey: "categoryApple",
+    titleKey: "categoryAppleTitle",
+    descriptionKey: "categoryAppleDescription",
   },
 };
 
@@ -433,6 +446,7 @@ const renderCategoryGroups = (sourceEntries) =>
     .map((group) => {
       const category = getCategoryMeta(group.category);
       const countLabel = group.entries.length === 1 ? t("categoryRecordSingular") : t("categoryRecordPlural");
+      const categoryDescription = category.description ? `<p>${category.description}</p>` : "";
 
       return `
         <section class="category-group" id="${categoryAnchor(group.category)}">
@@ -440,7 +454,7 @@ const renderCategoryGroups = (sourceEntries) =>
             <div>
               <p class="category-eyebrow">${category.label}</p>
               <h3>${category.title}</h3>
-              <p>${category.description}</p>
+              ${categoryDescription}
             </div>
             <span class="category-count">${group.entries.length} ${countLabel}</span>
           </div>
@@ -521,16 +535,71 @@ function renderDetailFacts(entry, status, officialSeverity) {
   `;
 }
 
+function renderDetailEntry(entry) {
+  const status = formatStatus(entry.status);
+  const officialSeverity = formatOfficialSeverity(entry.officialSeverity);
+  const category = getCategoryMeta(entry.category);
+  const vendor = getEntryVendor(entry);
+  const vendorLine = vendor && vendor.toLowerCase() !== category.label.toLowerCase()
+    ? `<p class="eyebrow">${vendor}</p>`
+    : "";
+  const localizedSummary = getEntryText(entry, "summary");
+  const localizedDetail = getEntryText(entry, "detail");
+  const summaryBlock = !entry.hidePublicDescription && localizedSummary
+    ? `
+        <div class="detail-copy-block">
+          <p class="detail-block-label">${t("detailPublicDescription")}</p>
+          <p class="detail-copy">${localizedSummary}</p>
+        </div>
+      `
+    : "";
+  const references = Array.isArray(entry.references) && entry.references.length > 0
+    ? entry.references
+        .map(
+          (reference) => `
+            <a href="${reference.url}">${translateReferenceLabel(reference.label)}</a>
+          `,
+        )
+        .join("")
+    : t("placeholder");
+
+  return `
+    <article class="panel detail-section" id="${entry.id}">
+      <div class="detail-section-head">
+        <div>
+          <p class="category-label">${category.label}</p>
+          ${vendorLine}
+          <h3>${entry.publicCve}</h3>
+        </div>
+      </div>
+
+      <div class="detail-copy-stack">
+        ${summaryBlock}
+
+        <div class="detail-copy-block">
+          <p class="detail-block-label">${t("detailResearchNotes")}</p>
+          <p class="detail-copy">${localizedDetail || t("placeholder")}</p>
+        </div>
+
+        ${renderDetailFacts(entry, status, officialSeverity)}
+
+        <div class="detail-copy-block">
+          <p class="detail-block-label">${t("detailReferences")}</p>
+          <div class="detail-record-links">${references}</div>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
 function renderDetailPage() {
-  const detailIndexGroups = document.querySelector("#detail-index-groups");
   const detailList = document.querySelector("#detail-list");
 
-  if (!detailIndexGroups || !detailList) {
+  if (!detailList) {
     return;
   }
 
   if (entries.length === 0) {
-    detailIndexGroups.innerHTML = `<article class="panel table-panel"><p class="empty-state">${t("emptyState")}</p></article>`;
     detailList.innerHTML = `
       <article class="panel detail-section">
         <p class="detail-copy">${t("emptyState")}</p>
@@ -539,62 +608,16 @@ function renderDetailPage() {
     return;
   }
 
-  detailIndexGroups.innerHTML = renderCategoryGroups(entries);
+  const selectedEntryId = window.location.hash.slice(1);
+  const selectedEntry = entries.find((entry) => entry.id === selectedEntryId);
 
-  detailList.innerHTML = entries
-    .map((entry) => {
-      const status = formatStatus(entry.status);
-      const officialSeverity = formatOfficialSeverity(entry.officialSeverity);
-      const category = getCategoryMeta(entry.category);
-      const localizedSummary = getEntryText(entry, "summary");
-      const localizedDetail = getEntryText(entry, "detail");
-      const summaryBlock = !entry.hidePublicDescription && localizedSummary
-        ? `
-            <div class="detail-copy-block">
-              <p class="detail-block-label">${t("detailPublicDescription")}</p>
-              <p class="detail-copy">${localizedSummary}</p>
-            </div>
-          `
-        : "";
-      const references = Array.isArray(entry.references) && entry.references.length > 0
-        ? entry.references
-            .map(
-              (reference) => `
-                <a href="${reference.url}">${translateReferenceLabel(reference.label)}</a>
-              `,
-            )
-            .join("")
-        : t("placeholder");
-
-      return `
-        <article class="panel detail-section" id="${entry.id}">
-          <div class="detail-section-head">
-            <div>
-              <p class="category-label">${category.label}</p>
-              <p class="eyebrow">${getEntryVendor(entry)}</p>
-              <h3>${entry.publicCve}</h3>
-            </div>
-          </div>
-
-          <div class="detail-copy-stack">
-            ${summaryBlock}
-
-            <div class="detail-copy-block">
-              <p class="detail-block-label">${t("detailResearchNotes")}</p>
-              <p class="detail-copy">${localizedDetail || t("placeholder")}</p>
-            </div>
-
-            ${renderDetailFacts(entry, status, officialSeverity)}
-
-            <div class="detail-copy-block">
-              <p class="detail-block-label">${t("detailReferences")}</p>
-              <div class="detail-record-links">${references}</div>
-            </div>
-          </div>
+  detailList.innerHTML = selectedEntry
+    ? renderDetailEntry(selectedEntry)
+    : `
+        <article class="panel detail-section">
+          <p class="detail-copy">${t("detailSelectPrompt")}</p>
         </article>
       `;
-    })
-    .join("");
 }
 
 function renderPage() {
@@ -617,5 +640,11 @@ if (toggleButton) {
     renderPage();
   });
 }
+
+window.addEventListener("hashchange", () => {
+  if (page === "detail") {
+    renderPage();
+  }
+});
 
 renderPage();
