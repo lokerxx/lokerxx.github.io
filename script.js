@@ -43,6 +43,7 @@ const uiText = {
     detailResearchNotes: "Research Notes",
     detailPublishedDate: "Published Date",
     detailStatus: "Status",
+    detailCredits: "Credit",
     detailOfficialSeverity: "Official Severity",
     detailOfficialScore: "Official Score",
     detailNvdScore: "NVD / ADP Score",
@@ -91,6 +92,7 @@ const uiText = {
     detailResearchNotes: "补充说明",
     detailPublishedDate: "公开日期",
     detailStatus: "状态",
+    detailCredits: "致谢",
     detailOfficialSeverity: "官方风险等级",
     detailOfficialScore: "官方评分",
     detailNvdScore: "NVD / ADP 评分",
@@ -110,6 +112,10 @@ const referenceLabelZh = {
   "Apache APISIX advisory": "Apache APISIX 公告",
   "Apache HTTP Server 2.4 vulnerabilities": "Apache HTTP Server 2.4 漏洞公告",
   "Apache Tomcat 11 vulnerabilities": "Apache Tomcat 11 漏洞公告",
+  "oss-security announcement: CVE-2026-47360": "oss-security 公告：CVE-2026-47360",
+  "oss-security announcement: CVE-2026-48005": "oss-security 公告：CVE-2026-48005",
+  "NVD: CVE-2026-47360": "NVD：CVE-2026-47360",
+  "NVD: CVE-2026-48005": "NVD：CVE-2026-48005",
 };
 
 const severityLabelMap = {
@@ -502,6 +508,12 @@ function renderDetailFacts(entry, status, officialSeverity) {
           ${entry.statusSource ? ` ${formatScoreSource(entry.statusSource)}` : ""}
         </div>
       </div>
+      ${Array.isArray(entry.credits) && entry.credits.length > 0 ? `
+      <div class="detail-fact">
+        <span class="detail-fact-label">${t("detailCredits")}</span>
+        <div class="detail-fact-value">${formatList(entry.credits)}</div>
+      </div>
+      ` : ""}
       <div class="detail-fact">
         <span class="detail-fact-label">${t("detailOfficialSeverity")}</span>
         <div class="detail-fact-value">
